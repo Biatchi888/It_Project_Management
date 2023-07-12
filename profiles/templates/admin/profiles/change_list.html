@@ -1,0 +1,398 @@
+{% extends 'admin/change_list.html' %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<link rel="stylesheet" href="{% static '/css/h1.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+  integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+  integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- scripts for charts START -->
+<script>
+  // Define an array of complementary colors to violet
+  var complementaryColors = [
+    'rgba(255, 99, 132, 0.6)',    // Red (transparent)
+    'rgba(54, 162, 235, 0.6)',    // Blue (transparent)
+    'rgba(255, 206, 86, 0.6)',    // Yellow (transparent)
+    'rgba(75, 192, 192, 0.6)',    // Green (transparent)
+    'rgba(255, 0, 0, 0.6)',       // Bright Red (transparent)
+    'rgba(0, 255, 0, 0.6)',       // Bright Green (transparent)
+    'rgba(0, 0, 255, 0.6)',       // Bright Blue (transparent)
+    'rgba(255, 255, 0, 0.6)',     // Bright Yellow (transparent)
+    'rgba(128, 0, 128, 0.6)',     // Purple (transparent)
+    'rgba(255, 165, 0, 0.6)',     // Orange (transparent)
+    'rgba(0, 128, 128, 0.6)',     // Teal (transparent)
+    'rgba(139, 69, 19, 0.6)'
+  ];
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get the profile details from the rendered HTML
+    const profileDetails = JSON.parse('{{ profile_details_json|escapejs }}');
+    console.log('Profile Details:', profileDetails);
+
+    // Extract the date joined values from the profile details
+    const dateJoinedValues = profileDetails.map(profile => profile.user.date_joined);
+    console.log('Date Joined Values:', dateJoinedValues);
+    const dataByMonth = countDataByMonth(dateJoinedValues);
+
+    // Prepare the data for the chart
+    const labels = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const data = labels.map(month => dataByMonth[month] || 0);
+
+    // Create the line chart
+    const lineChart = new Chart(document.getElementById('line-chart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'User Count',
+          data: data,
+          fill: false,
+          borderColor: complementaryColors,
+          tension: 0.1,
+          pointRadius: 8, // Adjust the point radius as desired
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Month',
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'User Count'
+            },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Function to count data by month
+    function countDataByMonth(data) {
+      const counts = {};
+      for (const value of data) {
+        const date = new Date(value);
+        const month = date.toLocaleString('default', { month: 'long' }); // Get month name
+        counts[month] = (counts[month] || 0) + 1;
+      }
+      return counts;
+    }
+
+
+
+
+
+
+    // GENDER CHARTS
+    // Retrieve the necessary data for charts (gender, cuisine, age)
+    const genderData = JSON.parse('{{ gender_data_json|escapejs }}');
+    const cuisineData = JSON.parse('{{ cuisine_data_json|escapejs }}');
+    const ageData = JSON.parse('{{ age_data_json|escapejs }}');
+
+    // Generate the gender chart
+    const genderChartCanvas = document.getElementById('gender-chart');
+    const genderChart = new Chart(genderChartCanvas, {
+      type: 'bar',
+      data: {
+        labels: ['Male', 'Female', 'Other'],
+        datasets: [{
+          label: 'User Count',
+          data: genderData,
+          backgroundColor: complementaryColors,
+          borderColor: complementaryColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            stepSize: 1
+          }
+        }
+      }
+    });
+
+    // Generate the preferred cuisine chart
+    const cuisineChartCanvas = document.getElementById('cuisine-chart');
+    const cuisineChart = new Chart(cuisineChartCanvas, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(cuisineData),
+        datasets: [{
+          label: 'User Count',
+          data: Object.values(cuisineData),
+          backgroundColor: complementaryColors,
+          borderColor: complementaryColors,
+          borderWidth: 1
+        }]
+      }
+    });
+
+    // Generate the age scatter plot
+    const ageChartCanvas = document.getElementById('age-chart');
+    const ageChart = new Chart(ageChartCanvas, {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'User Age',
+          data: ageData.map((dataPoint) => ({
+            x: dataPoint.age,
+            y: dataPoint.users
+          })),
+          backgroundColor: complementaryColors, // Green
+          borderColor: complementaryColors,
+          borderWidth: 1,
+          pointRadius: 8, // Adjust the point radius as desired
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Age'
+            },
+            beginAtZero: true
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Number of Users'
+            },
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
+
+  });
+
+</script>
+<!-- scripts for charts END -->
+{% endblock %}
+
+{% block result_list %}
+
+
+
+<div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;"> &nbsp;</div>
+
+<div style="display: flex;margin-bottom: 50px;">
+  <div class="container d-flex justify-content-start align-items-start" style="width: 35%;">
+    <div>
+      <img src="{% static '/icons/chef2.png' %}" style="height: 400px;margin-top: -30px;">
+      <h1 class="header">User Profile Dashboard</h1>
+    </div>
+  </div>
+  <div class="container"
+    style="border-radius: 20px; background: #dbbfdf; box-shadow: 20px 20px 60px #a48fa7, -20px -20px 60px #ffefff; padding: 20px;">
+    <div class="row">
+      <div class="col-lg-3">
+        <div>
+          <img src="{% static '/icons/chef.png' %}" alt="RecipeBook" style="height: 50px;margin-bottom: 10%;">
+          <h5 class="card-title" style="font-size: 30px; margin-left: 10px;">{{ recipe_count }}</h5>
+          <p class="card-text" style="font-size: 25px;">Users Registered per Month</p>
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="col-md-12">
+          <canvas id="line-chart" style="width: 100%; height: 400px;"></canvas>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!----------------->
+<!-- another chart gender vs preferred cuisine -->
+<div class="row g-6">
+  <div class="col-md-8">
+    <div class="card shadow" style="border: none;">
+      <div class="form-group">
+      </div>
+      <canvas id="gender-chart"></canvas>
+      <div class="card-body">
+        <h5 class="card-title">Gender Chart</h5>
+        <p class="card-text">
+          This graph demonstrates the number of genders per user
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- another CUISINE chart -->
+  <div class="col-md-4">
+    <div class="card shadow" style="border: none;height: 650px;">
+      <canvas id="cuisine-chart"></canvas>
+      <div class="card-body">
+        <h5 class="card-title">Preferred Cuisine Chart</h5>
+        <p class="card-text">
+          The Preferred Cuisine Chart represents the users according to their preferred cuisine styles
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!------------------>
+<!-- TOP USERS -->
+<div class="container-fluid" style="padding: 5%;">
+  <div class="row justify-content-center" style=" text-align: center;">
+    <div class="col-md-3"
+      style="border-radius: 40px; background: #937de4; box-shadow: 26px 26px 52px #614cad, inset -26px -26px 52px #8f6bff; margin-right: 2%; margin-left: 20px;">
+      <h3>Top User with the Most Recipe Uploaded</h3>
+      {% if user_with_most_recipes %}
+      <div>
+        <h4 style="font-size: xx-large;">{{ user_with_most_recipes }}</h4>
+      </div>
+      {% else %}
+      <div>
+        No users found
+      </div>
+      {% endif %}
+
+      <h4>{{ user_with_most_recipe_count }} recipes made</h4>
+
+    </div>
+
+
+    <!-- most preferred cuisine -->
+    <div class="col-md-3" style="border-radius: 40px; background: #b4f16b; margin-right: 2%;box-shadow: 26px 26px 52px #739e41, inset -26px -26px 52px #97d152;">
+      <h3>Most Preferred Cuisine</h3>
+      {% if cuisine_with_most_users %}
+      <div>
+        <h4 style="font-size: xx-large;">{{ cuisine_with_most_users }}</h4>
+      </div>
+      {% else %}
+      <div>
+        No cuisine found
+      </div>
+      {% endif %}
+
+      <h4>{{ cuisine_with_most_user_count }} users</h4>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- another AGE CHART -->
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="col">
+    <div class="card shadow" style="border: none; background-color: white;">
+      <canvas id="age-chart"></canvas>
+      <div class="card-body">
+        <h5 class="card-title">User's Age Chart</h5>
+        <p class="card-text">
+          This graph demonstrates the distribution of user ages.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- another CHART -->
+  <div class="col">
+    <div class="card shadow" style="border: none; background-color: white;">
+      <canvas id="cooktime-chart"></canvas>
+      <div class="card-body">
+        <h5 class="card-title">Cook Time Chart</h5>
+        <p class="card-text">
+          The cook time chart shows the amount of time each food will take
+          to be cooked. The data is the calculation of hours converted to minutes
+          plus the minutes indicated by the user.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card shadow" style="border: none; background-color: white;">
+      <canvas id="difficulty-chart"></canvas>
+      <div class="card-body">
+        <h5 class="card-title">Recipe Difficulty Chart</h5>
+        <p class="card-text">
+          The recipe difficulty chart shows the three categories of recipe
+          dificulty: Beginner, Intermediate, and Advanced.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card shadow" style="border: none; background-color: white;">
+      <canvas id="radar-chart"></canvas>
+      <div class="card-body">
+        <h5 class="card-title">Recipe Cost Chart</h5>
+        <p class="card-text">
+          The recipe price chart indicates the price or cost a recipe will
+          amount to. This includes the amount of ingredients, which was indicated by the user
+          who made the recipe.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex;margin-bottom: 50px;padding: 4%;">
+
+  <div class="container" style="border-radius: 20px;
+  background: #b4f16b;
+  box-shadow:  20px 20px 41px #87b550,
+               -20px -20px 41px #e1ff86; padding: 20px;">
+    <div class="row">
+      <div class="col-lg-3">
+        <div>
+          <img src="{% static '/icons/batter.png' %}" alt="RecipeBook" style="height: 50px;margin-bottom: 10%;">
+          {% if recipe_with_highest_rating %}
+          <h2>Recipe with Highest Rating</h2>
+          <p>Title: {{ recipe_with_highest_rating.title }}</p>
+          <p>Rating: {{ recipe_with_highest_rating.rating }}</p>
+          <!-- Add other fields as needed -->
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="col-md-12">
+          <canvas id="ratings-chart" style="width: 100%; height: 400px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container d-flex justify-content-start align-items-start" style="width: 35%;">
+    <div>
+      <img src="{% static '/icons/chef3.png' %}" style="height: 400px;margin-top: -30px;">
+      <h1 class="header">Find Which Recipe has the Highest Rating<img src="{% static '/icons/rate.png' %}"
+          style="height: 50px;"></h1>
+    </div>
+  </div>
+</div>
+<div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;"> &nbsp;</div>
+
+
+{{ block.super }}
+{% endblock %}
