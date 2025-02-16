@@ -6,10 +6,12 @@ from django.http import JsonResponse
 import json
 from django.db.models import Count
 from django.core.exceptions import FieldError
+from django_countries import countries
+
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("pk", "user", "bio", "image")
-    change_list_template = 'admin/profiles/change_list.html'  # Path to your custom change_list.html template
+    change_list_template = 'admin/profiles/change_list.html'    
 
     def changelist_view(self, request, extra_context=None):
         # Retrieve the name of the administrator
@@ -23,14 +25,51 @@ class ProfileAdmin(admin.ModelAdmin):
         gender_data = {
             'Male': 0,
             'Female': 0,
-            'Other': 0
+            'Others': 0
         }
+
+        # Retrieve civil status data
+        civil_status_data = {
+            'Married': 0,
+            'Single': 0,
+            'Divorced': 0,
+            'Widowed': 0,
+        }
+
+        # Count users per country
+        # country_data = Profile.objects.values('country').annotate(user_count=Count('country'))
+
+        # Load the country data from the JSON file
+        with open('country_data.json') as file:
+            country_data = json.load(file)
+
+        # Create the country mapping
+        country_mapping = {}
+        for item in country_data:
+            country_code = item['code']
+            country_name = item['name']
+            country_mapping[country_name] = country_code
+
+        # Prepare the data for the choropleth map
+        map_data = {}
+        for item in country_data:
+            country_code = item['code']
+            country_name = item['name']
+            if country_name in country_mapping:
+                country_alpha3 = country_mapping[country_name]
+                map_data[country_alpha3] = country_code
+
         cuisine_data = {}
         age_data = []
         age_counts = {}  # Initialize the age_counts dictionary
 
         
         for profile in profiles:
+            # Update civil status count
+            civil_status = profile.civil_status
+            if civil_status in civil_status_data:
+                civil_status_data[civil_status] += 1
+
             # Update gender count
             gender = profile.gender
             if gender in gender_data:
@@ -62,6 +101,8 @@ class ProfileAdmin(admin.ModelAdmin):
         gender_data_json = json.dumps(gender_data)
         cuisine_data_json = json.dumps(cuisine_data)
         age_data_json = json.dumps(age_data)
+        civil_status_data_json = json.dumps(civil_status_data)
+        map_data_json = json.dumps(map_data)
 
         # Get the user with the highest number of created recipes
         try:
@@ -88,8 +129,10 @@ class ProfileAdmin(admin.ModelAdmin):
         extra_context['user_with_most_recipe_count'] = user_with_most_recipe_count
         extra_context['cuisine_with_most_users'] = cuisine_with_most_users
         extra_context['cuisine_with_most_user_count'] = cuisine_with_most_user_count
+        extra_context['civil_status_data_json'] = civil_status_data_json  # Add this line
+        extra_context['map_data_json'] = map_data_json
         
-        
+
         return super().changelist_view(request, extra_context=extra_context)
 
 admin.site.register(Profile, ProfileAdmin)

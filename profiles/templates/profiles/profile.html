@@ -20,17 +20,52 @@
             </div>
             <h1>{{ profile.user.username }}</h1>
             <p><strong>Joined: </strong>{{ profile.user.date_joined|date:'d M Y' }}</p>
-            <p><strong>Recipes: </strong>{{ profile.user.recipe_owner.count }}  {{ profile.user.recipe_image.count }}</p>
-            <p><strong>First Name: </strong>{{ profile.first_name }}</p>
-            <p><strong>Last Name: </strong>{{ profile.last_name }}</p>
-            <p><strong>Birthday: </strong>{{ profile.birthday }}</p>
-            <p><strong>Age: </strong>{{ profile.age }}</p>
-            <p><strong>Gender: </strong>{{ profile.gender }}</p>
-            <p><strong>Preferred Cuisine: </strong>{{ profile.preferred_cuisine }}</p>
-            <p><strong>Country: </strong>{{ profile.country }}</p>
+            <table>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;" style="text-align: justify;">Recipes</th>
+                    <td>{{ profile.user.recipe_owner.count }} {{ profile.user.recipe_image.count }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">First Name</th>
+                    <td>{{ profile.first_name }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">Last Name</th>
+                    <td>{{ profile.last_name }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">Birthday</th>
+                    <td>{{ profile.birthday }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">Age</th>
+                    <td>{{ profile.age }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">Gender</th>
+                    <td>{{ profile.gender }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">Preferred Cuisine</th>
+                    <td>{{ profile.preferred_cuisine }}</td>
+                </tr>
+                <tr>
+                    <th style="text-align: justify;background-color: #f0f0f0;padding: 2%;">Country</th>
+                    <td>{{ profile.country }}</td>
+                </tr>
+            </table>
+
             {% if profile.bio is not none %}
-            Bio: {{ profile.bio|safe }}
-            {% endif %}
+            <br><br>
+            <table>
+                <tr>
+                    <td style="background-color: #f0f0f0;"><strong style="font-size: 20px;">Bio</strong></td>
+                </tr>
+                <tr>
+                    <td>{{ profile.bio|safe }}</td>
+                </tr>
+            </table>
+            {% endif %}<br>
 
             {% if request.user == profile.user %}
             <button id="myBtn" class="btn btn-primary w-25 mb-4">Edit</button>

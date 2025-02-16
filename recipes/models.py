@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from djrichtextfield.models import RichTextField
 from django_resized import ResizedImageField
+from django.conf import settings
+import os
+from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 
 
@@ -40,7 +44,7 @@ class Recipe(models.Model):
     user = models.ForeignKey(User, related_name="recipe_owner", on_delete=models.CASCADE)
     rating = models.FloatField(default=0)
     rating_count = models.IntegerField(default=0)
-    title = models.CharField(max_length=300, null=False, blank=False)
+    title = models.CharField(max_length=300, null=False, blank=False)    
     description = models.CharField(max_length=500, null=False, blank=False)
     instructions = RichTextField(max_length=10000, null=False, blank=False)
     ingredients = RichTextField(max_length=10000, null=False, blank=False)
@@ -54,16 +58,10 @@ class Recipe(models.Model):
     total_cooktime = models.IntegerField(null=False, blank=False, default=0,editable=False)  # Make the field non-editable
 
     price = models.IntegerField(null=False, blank=False)
+    image = CloudinaryField('image', null=False, blank=False)
 
+    image_url = models.URLField(max_length=500, blank=True, null=True)
 
-    image = ResizedImageField(
-        size=[400, None],
-        quality=75,
-        upload_to="recipes/",
-        force_format="WEBP",
-        blank=False,
-        null=False,
-    )
     image_alt = models.CharField(max_length=100, null=False, blank=False)
     meal_type = models.CharField(max_length=50, choices=MEAL_TYPES, default="breakfast")
     recipe_difficulty = models.CharField(max_length=50, choices=RECIPE_DIFFICULTY, default="beginner")
@@ -80,8 +78,6 @@ class Recipe(models.Model):
     @classmethod
     def get_meal_type_counts(cls):
         return cls.objects.values("meal_type").annotate(count=models.Count("id"))
-
-
     def save(self, *args, **kwargs):
         if not self.preptime_hours and not self.preptime_minutes:
             self.total_preptime = 0
@@ -104,3 +100,6 @@ class Recipe(models.Model):
             self.total_cooktime = total_cooktime
 
         super().save(*args, **kwargs)
+        if self.image:
+            self.image_url = self.image.url  # Get Cloudinary image URL
+            super().save(update_fields=['image_url'])

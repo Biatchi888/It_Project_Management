@@ -1,363 +1,447 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap');
-:root{
-    /* FONT */
-    --title:'Merriweather';
-    --sub-font: 'Open Sans';
-    --main-font:'Source Sans Pro';
+@import url("https://fonts.googleapis.com/css2?family=Merriweather&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap");
+:root {
+  /* FONT */
+  --title: "Merriweather";
+  --sub-font: "Open Sans";
+  --main-font: "Source Sans Pro";
 
-    /* Colours*/
-    --orange: #F97B22;
-    --background: #FEE8B0;
-    --lightgreen: #9CA777;
-    --green: #7C9070;
-    --white: #fff;
-    --black: #000;
+  /* Colours*/
+  --orange: #f97b22;
+  --background: #fee8b0;
+  --lightgreen: #9ca777;
+  --green: #7c9070;
+  --white: #fff;
+  --black: #000;
 
-    /*Utils*/
-    --smal-box-shadow: 1px -1px 7px 0 #00000061;
-    --border: 1px solid #00000030;
-
+  /*Utils*/
+  --smal-box-shadow: 1px -1px 7px 0 #00000061;
+  --border: 1px solid #00000030;
 }
 /*Header*/
 
-
-html, body {
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    font-family: var(--main-font);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--main-font);
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--title);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--title);
 }
 
 main {
-    flex: 1 0 auto;
-    background-color: var(--white);
+  flex: 1 0 auto;
+  background-color: var(--white);
 }
 
 /* Footer */
 footer {
-    flex-shrink: 0;
-    background-color: var(--off-white);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    border-top: var(--border);
+  flex-shrink: 0;
+  background-color: var(--off-white);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-top: var(--border);
 }
 
 .social-icon {
-    height: 2rem;
-    margin: 1rem;
+  height: 2rem;
+  margin: 1rem;
 }
 
 /* Header */
 .navbar {
-    background-color: var(--orange);
-    box-shadow: var(--smal-box-shadow);
+  background-color: var(--orange);
+  box-shadow: var(--smal-box-shadow);
 }
 
 a.nav-link {
-    color: var(--black);
+  color: var(--black);
 }
 
 img.logo {
-    width: 6.75rem;
+  width: 6.75rem;
 }
 
 .active {
-    border-bottom: 2px solid var(--blacks);
-    font-weight: 500;
+  border-bottom: 2px solid var(--blacks);
+  font-weight: 500;
 }
 
 /* Form */
 
 .form {
-    width: 100%;
-    margin: 3% auto;
-    box-shadow: var(--smal-box-shadow);
-    border-radius: 5px;
+  width: 100%;
+  margin: 3% auto;
+  box-shadow: var(--smal-box-shadow);
+  border-radius: 5px;
 }
 
 /*Recipes*/
 
 .card {
-    height: 90%;
-    margin-top: 1rem;
+  height: 90%;
+  margin-top: 1rem;
 }
 
 .recipes {
-    text-decoration: none;
-    color: var(--black);
+  text-decoration: none;
+  color: var(--black);
 }
 
 .recipes:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .recipe-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .recipe-container {
-    display: flex;
-    flex-direction: column;
-
+  display: flex;
+  flex-direction: column;
 }
 
-.ingredients, .instructions, .recipe-detail {
-    width: 100%;
+.ingredients,
+.instructions,
+.recipe-detail {
+  width: 100%;
 }
 
 .recipe-img {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .recipe-pic {
-    width: 80%;
-    height: auto;
+  width: 80%;
+  height: auto;
 }
 
 .recipe-cont {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 a.img-container {
-    position: relative;
-    text-align: center;
-    color: var(--white);
-    margin: 2%;
-    overflow: hidden;
-    text-decoration: none;
-    border: 1px solid var(--border);
-    box-shadow: var(--smal-box-shadow);
+  position: relative;
+  text-align: center;
+  color: var(--white);
+  margin: 2%;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  box-shadow: var(--smal-box-shadow);
 }
 
 a.img-container:hover {
-    color: var(--orange);
+  color: var(--orange);
 }
 
 .img-container img {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
 .centered {
-    width: 100%;
-    background-color: #000000c9;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  width: 100%;
+  background-color: #000000c9;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Profiles */
 
 .profile-img {
-    width: 280px;
-    margin: 0 auto;
+  width: 280px;
+  margin: 0 auto;
 }
 
 .profile-img img {
-    border-radius: 8px;
-    width: 100%;
+  border-radius: 8px;
+  width: 100%;
 }
 
 .profile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .info {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .profile-recipes {
-    width: 100%;
+  width: 100%;
 }
 
-@media screen and (min-width:40em){
-    .form {
-        width: 50%;
-    }
+@media screen and (min-width: 40em) {
+  .form {
+    width: 50%;
+  }
 
-    .recipe-cont {
-        flex-direction: row;
-    }
+  .recipe-cont {
+    flex-direction: row;
+  }
 
-    .img-container {
-        flex-direction: row;
-        width: 29%;
-    }
+  .img-container {
+    flex-direction: row;
+    width: 29%;
+  }
 }
 
 @media screen and (min-width: 62.5em) {
-    .main-title {
-        width: 50%;
-    }
-    
-    .recipe-info {
-        flex-direction: row;
-        border-style: dashed
-    }
+  .main-title {
+    width: 50%;
+  }
 
-    .recipe-img {
-        width: 40%;
-        margin: 0 auto;
-    }
+  .recipe-info {
+    flex-direction: row;
+    border-style: dashed;
+  }
 
-    .recipe-detail {
-        width: 60%;
-        padding: 2rem;
-    }
+  .recipe-img {
+    width: 40%;
+    margin: 0 auto;
+  }
 
-    .recipe-container {
-        flex-direction: row;
-    }
+  .recipe-detail {
+    width: 60%;
+    padding: 2rem;
+  }
 
-    .ingredients {
-        width: 33.33%;
-    }
+  .recipe-container {
+    flex-direction: row;
+  }
 
-    .instructions {
-        width: 66.66%;
-    }
+  .ingredients {
+    width: 33.33%;
+  }
 
-    .profile {
-        flex-direction: row;
-    }
+  .instructions {
+    width: 66.66%;
+  }
 
-    .info {
-        width: 30%;
-    }
+  .profile {
+    flex-direction: row;
+  }
 
-    .profile-recipes {
-        width: 70%;
-        padding: 1.5rem 3rem;
-    }
+  .info {
+    width: 30%;
+  }
 
-    .profile-recipes a {
-        text-decoration: none;
-    }
+  .profile-recipes {
+    width: 70%;
+    padding: 1.5rem 3rem;
+  }
+
+  .profile-recipes a {
+    text-decoration: none;
+  }
 }
 
 /*Back to Top*/
 .back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 34px;
-    height: 34px;
-    z-index: 9999;
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity 0.2s ease-out;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 34px;
+  height: 34px;
+  z-index: 9999;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s ease-out;
 }
-.back-to-top:hover{
-    opacity: 0.7;
+.back-to-top:hover {
+  opacity: 0.7;
 }
-
-
 
 div.row.comment-form {
-    letter-spacing: 0.03em;
+  letter-spacing: 0.03em;
 }
 div.row.comment-form button.comment-send {
-    margin-right: 30px;
+  margin-right: 30px;
 }
 div.row.comment-form textarea#editor {
-    width: 98%;
-    height: 100px;
+  width: 98%;
+  height: 100px;
 }
 div.row.comment-form a {
-    color: #fafafb;
-    font-weight: 700;
+  color: #fafafb;
+  font-weight: 700;
 }
 ul.comment ul {
-    margin-left: 5rem;
+  margin-left: 5rem;
 }
 ul.comment li {
-    margin: 1.5rem 10px;
+  margin: 1.5rem 10px;
 }
 ul.comment img.avatar {
-    width: 100%;
-    max-width: 200px;
-    min-width: 100px;
-    padding: 7px;
-    margin-top: 5px;
-    margin-right: 15px;
-    border: #404251 solid 2px;
-    border-radius: 15px;
+  width: 100%;
+  max-width: 200px;
+  min-width: 100px;
+  padding: 7px;
+  margin-top: 5px;
+  margin-right: 15px;
+  border: #404251 solid 2px;
+  border-radius: 15px;
 }
 ul.comment .card {
-    border-radius: 15px;
-    background-color: #404251;
+  border-radius: 15px;
+  background-color: #404251;
 }
 ul.comment .card .fas {
-    cursor: pointer;
+  cursor: pointer;
 }
 ul.comment .card .card-header {
-    border-radius: 15px 15px 0 0;
-    background-color: #2e2f3a;
-    z-index: 2;
+  border-radius: 15px 15px 0 0;
+  background-color: #2e2f3a;
+  z-index: 2;
 }
 ul.comment .card .card-header a {
-    color: #d0d1da;
-    font-weight: bolder;
-    padding: 8px 5px;
+  color: #d0d1da;
+  font-weight: bolder;
+  padding: 8px 5px;
 }
 ul.comment .card .card-header a.isAuthor {
-    font-weight: bold;
-    color: #dedfe5;
-    text-decoration: none;
+  font-weight: bold;
+  color: #dedfe5;
+  text-decoration: none;
 }
 ul.comment .card .card-header a.isAuthor:hover {
-    outline: rgba(255,255,255,0.01) solid 5px;
+  outline: rgba(255, 255, 255, 0.01) solid 5px;
 }
 ul.comment .card .card-header a.isAuthor:after {
-    position: relative;
-    top: -3px;
-    text-decoration: none !important;
-    content: "Автор";
-    font-size: 62%;
-    font-weight: bold;
-    color: #fafafb;
-    padding: 2.3px 5px;
-    margin-left: 10px;
-    border-radius: 5px;
-    background-color: #666981;
+  position: relative;
+  top: -3px;
+  text-decoration: none !important;
+  content: "Автор";
+  font-size: 62%;
+  font-weight: bold;
+  color: #fafafb;
+  padding: 2.3px 5px;
+  margin-left: 10px;
+  border-radius: 5px;
+  background-color: #666981;
 }
 ul.comment .card .card-header::before {
-    content: "";
-    position: absolute;
-    left: -20px;
-    top: 20px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 17.5px 40px 17.5px 0;
-    border-color: transparent #2e2f3a transparent transparent;
-    z-index: 1;
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 17.5px 40px 17.5px 0;
+  border-color: transparent #2e2f3a transparent transparent;
+  z-index: 1;
 }
 ul.comment .card .card-body {
-    font-size: 90%;
-    letter-spacing: 0.03em;
-    border-radius: 0 0 15px 15px;
-    background-color: #404251;
+  font-size: 90%;
+  letter-spacing: 0.03em;
+  border-radius: 0 0 15px 15px;
+  background-color: #404251;
+}
+/* Floating Chatbox Button */
+.chatbox-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Chatbox Container */
+.chatbox {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  display: none; /* Hidden by default */
+  flex-direction: column;
+}
+
+/* Chatbox Header */
+.chatbox-header {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Chatbox Close Button */
+.chatbox-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Chatbox Body */
+.chatbox-body {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+/* Chatbox Footer */
+.chatbox-footer {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.chatbox-footer input {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.chatbox-footer button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}

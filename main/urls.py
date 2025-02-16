@@ -28,4 +28,5 @@ urlpatterns = [
     path('recipes/', include('recipes.urls')),
     path('profiles/', include('profiles.urls')),
     path('profiles/', include('profiles.urls')),
+    path('mychatbot/', include('mychatbot.urls')), #for the chatbot
 ]

@@ -14,78 +14,522 @@
   integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- scripts for charts START -->
 <script>
+
   document.addEventListener('DOMContentLoaded', function () {
-    // Get the profile details from the rendered HTML
-    const profileDetails = JSON.parse('{{ profile_details_json|escapejs }}');
-    console.log('Profile Details:', profileDetails);
 
-    // Extract the date joined values from the profile details
-    const dateJoinedValues = profileDetails.map(profile => profile.user.date_joined);
-    console.log('Date Joined Values:', dateJoinedValues);
-    const dataByMonth = countDataByMonth(dateJoinedValues);
+    //MEALTYPE--------------------------------------------------------------------------
+    var mealTypeCounts = JSON.parse('{{ meal_type_counts|safe }}');
+    console.log('mealTypeCounts:', mealTypeCounts);
 
-    // Prepare the data for the chart
-    const labels = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+    var mealTypes = [];
+    var recipeCounts = [];
+
+    // Extract meal types and recipe counts from JSON data
+    mealTypeCounts.forEach(function (item) {
+      mealTypes.push(item.meal_type);
+      recipeCounts.push(item.count);
+    });
+
+    // Define an array of complementary colors to violet
+    var complementaryColors = [
+      'rgba(255, 99, 132, 0.6)',    // Red (transparent)
+      'rgba(54, 162, 235, 0.6)',    // Blue (transparent)
+      'rgba(255, 206, 86, 0.6)',    // Yellow (transparent)
+      'rgba(75, 192, 192, 0.6)',    // Green (transparent)
+      'rgba(255, 0, 0, 0.6)',       // Bright Red (transparent)
+      'rgba(0, 255, 0, 0.6)',       // Bright Green (transparent)
+      'rgba(0, 0, 255, 0.6)',       // Bright Blue (transparent)
+      'rgba(255, 255, 0, 0.6)',     // Bright Yellow (transparent)
+      'rgba(128, 0, 128, 0.6)',     // Purple (transparent)
+      'rgba(255, 165, 0, 0.6)',     // Orange (transparent)
+      'rgba(0, 128, 128, 0.6)',     // Teal (transparent)
+      'rgba(139, 69, 19, 0.6)'
     ];
-    const data = labels.map(month => dataByMonth[month] || 0);
 
-    // Create the line chart
-    const lineChart = new Chart(document.getElementById('line-chart'), {
-      type: 'line',
+    // Create a bar chart for recipe count
+    var ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
       data: {
-        labels: labels,
+        labels: mealTypes,
         datasets: [{
-          label: 'User Count',
-          data: data,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
+          label: 'Recipe Count',
+          data: recipeCounts,
+          backgroundColor: complementaryColors,
+          borderColor: complementaryColors,
+          borderWidth: 1
         }]
       },
       options: {
         scales: {
-          x: {
-            display: true,
-            title: {
-              display: true,
-              text: 'Month',
-            }
-          },
           y: {
-            display: true,
-            title: {
-              display: true,
-              text: 'User Count'
-            },
-            beginAtZero: true
+            beginAtZero: true,
+            precision: 0
           }
         }
       }
     });
 
-    // Function to count data by month
-    function countDataByMonth(data) {
-      const counts = {};
-      for (const value of data) {
-        const date = new Date(value);
-        const month = date.toLocaleString('default', { month: 'long' }); // Get month name
-        counts[month] = (counts[month] || 0) + 1;
+
+
+    //SERVINGSCOUNT--------------------------------------------------------------------------
+
+    var servingData = JSON.parse('{{ serving_data|safe }}');
+    console.log('servingData:', servingData);
+
+    var recipeNames = [];
+    var servingCounts = [];
+
+    // Extract recipe names and serving counts from JSON data
+    servingData.forEach(function (item) {
+      recipeNames.push(item.title);
+      servingCounts.push(item.servings);
+    });
+
+    // Create a bar chart for serving count
+    var servingCtx = document.getElementById('serving-chart').getContext('2d');
+    new Chart(servingCtx, {
+      type: 'bar',
+      data: {
+        labels: recipeNames,
+        datasets: [{
+          label: 'Serving Count',
+          data: servingCounts,
+          backgroundColor: complementaryColors,
+          borderColor: complementaryColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
       }
-      return counts;
+    });
+
+    //DIFFICULTY--------------------------------------------------------------------------
+
+    var recipeDifficulties = JSON.parse('{{ recipe_difficulties|safe }}');
+    console.log('recipeDifficulties:', recipeDifficulties);
+
+    var difficulties = [];
+    var recipeCounts = [];
+
+    // Extract recipe difficulties and counts from JSON data
+    recipeDifficulties.forEach(function (item) {
+      difficulties.push(item.recipe_difficulty);
+      recipeCounts.push(item.count);
+    });
+
+    // Create a polar area chart for recipe difficulty
+    var ctx2 = document.getElementById('difficulty-chart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'polarArea',
+      data: {
+        labels: difficulties,
+        datasets: [{
+          data: recipeCounts,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.6)',   // Red (transparent)
+            'rgba(54, 162, 235, 0.6)',   // Blue (transparent)
+            'rgba(255, 206, 86, 0.6)',   // Yellow (transparent)
+            'rgba(75, 192, 192, 0.6)'    // Green (transparent)
+          ],
+          borderColor: 'rgba(255, 255, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scale: {
+          ticks: {
+            beginAtZero: true
+          },
+          reverse: false
+        },
+        legend: {
+          position: 'bottom'
+        },
+        plugins: {
+          datalabels: {
+            color: '#000',
+            anchor: 'end',
+            align: 'start',
+            offset: 10,
+            padding: 5
+          }
+        }
+      }
+    });
+
+
+
+
+    //ANALYTCIS RECIPE--------------------------------------------------------------------------
+
+    var recipeData = JSON.parse('{{ recipe_per_month|safe }}');
+
+    // Prepare the data for the chart
+    var labels = [];
+    var counts = [];
+
+    // Create an array with month names from January to December
+    var months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    // Loop through the months array and check if the corresponding data exists in recipeData
+    for (var i = 0; i < 12; i++) {
+      var monthData = recipeData.find(function (item) {
+        var date = new Date(item.month);
+        return date.getMonth() === i;
+      });
+
+      if (monthData) {
+        labels.push(months[i] + ' ' + monthData.month.slice(-4));
+        counts.push(monthData.count);
+      } else {
+        labels.push(months[i]);
+        counts.push(0);
+      }
     }
-  });
+
+    // Create the chart
+    var ctx = document.getElementById("recipeAnalytics").getContext("2d");
+    var chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Recipes added per month",
+          data: counts,
+          backgroundColor: "rgba(147, 13, 197, 0.2)",
+          borderColor: "rgba(166, 13, 222, 1)",
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              precision: 0
+            }
+          }
+        },
+        animation: {
+          x: {
+            type: 'number',
+            easing: 'linear',
+            duration: 2000
+          },
+          y: {
+            type: 'number',
+            easing: 'easeOutElastic',
+            duration: 2000,
+            from: function (ctx) {
+              if (ctx.type !== 'data' || ctx.yStarted) {
+                return ctx.chart.scales.y.getPixelForValue(0);
+              }
+              ctx.yStarted = true;
+              return ctx.chart.scales.y.getPixelForValue(100);
+            }
+          }
+        }
+      }
+    });
+
+
+    //total_prep--------------------------
+    // Recipe Preptime
+    var recipePreptime = JSON.parse('{{ recipe_preptime|safe }}');
+    console.log('recipePreptime:', recipePreptime);
+
+    var recipeNamesPrep = [];
+    var totalPreptimes = [];
+
+    // Extract recipe names and total preptime from JSON data
+    recipePreptime.forEach(function (item) {
+      recipeNamesPrep.push(item.title); // Use recipeNamesPrep instead of recipeNames
+      totalPreptimes.push(item.total_preptime);
+    });
+
+    // Find the recipe with the highest total preptime
+    var maxPreptime = Math.max(...totalPreptimes);
+    var maxPreptimeIndex = totalPreptimes.indexOf(maxPreptime);
+
+    // Create an array of bar colors with the highest preptime bar in red
+    var barColors = totalPreptimes.map(function (preptime, index) {
+      if (index === maxPreptimeIndex) {
+        return 'rgba(255, 0, 0, 0.6)';  // Red (transparent)
+      } else {
+        return 'rgba(54, 162, 235, 0.6)';  // Blue (transparent)
+      }
+    });
+
+    // Create a horizontal bar chart for total preptime
+    var ctx = document.getElementById('preptime-chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: recipeNamesPrep, // Use recipeNamesPrep instead of recipeNames
+        datasets: [{
+          label: 'Total Preptime',
+          data: totalPreptimes,
+          backgroundColor: barColors,
+          borderColor: 'rgba(0, 0, 0, 0.6)',
+        }]
+      },
+      options: {
+        indexAxis: 'y', // Rotate the chart to display as horizontal bars
+        scales: {
+          x: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+
+
+    var recipeCooktime = JSON.parse('{{ recipe_cooktime|safe }}');
+    console.log('recipeCooktime:', recipeCooktime);
+
+    var recipeNamesCook = [];
+    var totalCooktimes = [];
+
+    // Extract recipe names and total cooktime from JSON data
+    recipeCooktime.forEach(function (item) {
+      recipeNamesCook.push(item.title);  // Corrected line
+      totalCooktimes.push(item.total_cooktime);
+    });
+
+    // Find the recipe with the highest total cooktime
+    var maxCooktime = Math.max(...totalCooktimes);
+    var maxCooktimeIndex = totalCooktimes.indexOf(maxCooktime);
+
+    // Create an array of bar colors with the highest cooktime bar in red
+    var barColors = totalCooktimes.map(function (cooktime, index) {
+      if (index === maxCooktimeIndex) {
+        return 'rgba(255, 0, 0, 0.6)';  // Red (transparent)
+      } else {
+        return 'rgba(54, 162, 235, 0.6)';  // Blue (transparent)
+      }
+    });
+
+    // Create a horizontal bar chart for total cooktime
+    var ctx = document.getElementById('cooktime-chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: recipeNamesCook,  // Corrected line
+        datasets: [{
+          label: 'Total Cooktime',
+          data: totalCooktimes,
+          backgroundColor: barColors,
+          borderColor: 'rgba(0, 0, 0, 0.6)',
+        }]
+      },
+      options: {
+        indexAxis: 'y', // Rotate the chart to display as horizontal bars
+        scales: {
+          x: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+
+
+    //prices-------------------------------------------------
+    var recipePrices = JSON.parse('{{ recipe_prices|safe }}');
+    var recipeNames = recipePrices.map(function (recipe) { return recipe.title; });
+    var prices = recipePrices.map(function (recipe) { return recipe.price; });
+
+    var ctx = document.getElementById("radar-chart").getContext("2d");
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: recipeNames,
+        datasets: [
+          {
+            label: 'Prices',
+            data: prices,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scale: {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+    var recipeRatings = JSON.parse('{{ recipe_ratings|safe }}');
+    console.log('recipeRatings:', recipeRatings);
+
+    var ratingsLabels = [];
+    var ratingsData = [];
+
+    // Extract recipe name and rating from JSON data
+    recipeRatings.forEach(function (item) {
+      ratingsLabels.push(item.title);
+      ratingsData.push(item.rating);
+    });
+
+    // Create a doughnut chart for recipe ratings
+    var ratingsCtx = document.getElementById('ratings-chart').getContext('2d');
+
+    new Chart(ratingsCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ratingsLabels,
+        datasets: [{
+          data: ratingsData,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.6)',   // Red (transparent)
+            'rgba(54, 162, 235, 0.6)',   // Blue (transparent)
+            'rgba(255, 206, 86, 0.6)',   // Yellow (transparent)
+            'rgba(75, 192, 192, 0.6)',   // Green (transparent)
+            'rgba(153, 102, 255, 0.6)',  // Purple (transparent)
+            'rgba(255, 159, 64, 0.6)',    // Orange (transparent)
+            'rgba(0, 255, 0, 0.6)',       // Bright Green (transparent)
+            'rgba(0, 0, 255, 0.6)',       // Bright Blue (transparent)
+            'rgba(255, 255, 0, 0.6)',     // Bright Yellow (transparent)
+            'rgba(128, 0, 128, 0.6)',     // Purple (transparent)
+            'rgba(255, 165, 0, 0.6)',     // Orange (transparent)
+            'rgba(0, 128, 128, 0.6)',     // Teal (transparent)
+          ],
+          borderColor: 'rgba(255, 255, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right'
+          },
+          datalabels: {
+            color: '#000',
+            formatter: function (value, context) {
+              var sum = context.dataset.data.reduce((a, b) => a + b, 0);
+              var percentage = ((value / sum) * 100).toFixed(2) + '%';
+              return percentage;
+            },
+            anchor: 'end',
+            align: 'start',
+            offset: 10,
+            padding: 5
+          }
+        }
+      }
+    });
+    var cuisineTypeData = JSON.parse('{{ cuisine_type_counts | safe }}');
+    var cuisineTypes = cuisineTypeData.map(function (entry) {
+      return entry.cuisine_types;
+    });
+    var counts = cuisineTypeData.map(function (entry) {
+      return entry.count;
+    });
+
+    var allCuisineTypes = []; // Array to hold all cuisine types
+    var allCounts = []; // Array to hold corresponding counts
+
+    // Get all unique cuisine types
+    cuisineTypes.forEach(function (type, index) {
+      if (!allCuisineTypes.includes(type)) {
+        allCuisineTypes.push(type);
+        allCounts.push(0);
+      }
+    });
+
+    // Update the counts with actual values
+    cuisineTypes.forEach(function (type, index) {
+      var typeIndex = allCuisineTypes.indexOf(type);
+      allCounts[typeIndex] += counts[index];
+    });
+
+    var ctx = document.getElementById('cuisineTypeChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: allCuisineTypes,
+        datasets: [{
+          label: 'Recipe Count',
+          data: allCounts,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(255, 205, 86, 0.5)',
+            'rgba(153, 102, 255, 0.5)',
+            'rgba(255, 159, 64, 0.5)',
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(255, 205, 86, 0.5)',
+            'rgba(153, 102, 255, 0.5)',
+            'rgba(255, 159, 64, 0.5)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Recipe Count per Cuisine Type'
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            grid: {
+              display: true
+            }
+          }
+        }
+      }
+    });
+
+
+  }); // Closing bracket for DOMContentLoaded event listener
+
 </script>
-<!-- scripts for charts END -->
 {% endblock %}
 
 {% block result_list %}
-
-
 
 <div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;"> &nbsp;</div>
 
@@ -104,13 +548,12 @@
         <div>
           <img src="{% static '/icons/chef.png' %}" alt="RecipeBook" style="height: 50px;margin-bottom: 10%;">
           <h5 class="card-title" style="font-size: 30px; margin-left: 10px;">{{ recipe_count }}</h5>
-          <p class="card-text" style="font-size: 25px;">Users Registered per Month</p>
+          <p class="card-text" style="font-size: 25px;">Total number of recipes</p>
         </div>
       </div>
       <div class="col-lg-9">
         <div class="col-md-12">
-          <canvas id="line-chart" style="width: 100%; height: 400px;"></canvas>
-
+          <canvas id="recipeAnalytics" style="width: 100%; height: 400px;"></canvas>
         </div>
       </div>
     </div>
@@ -283,7 +726,22 @@
     </div>
   </div>
 </div>
-<div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;"> &nbsp;</div>
+
+<div class="container d-flex card shadow" style="border: none; background-color: white;padding: 5%;">
+  <canvas id="cuisineTypeChart"></canvas>
+  <div class="card-body">
+    <h5 class="card-title">Recipe Based on Cuisine Types</h5>
+    <p class="card-text">
+      The Cuisine Types Chart shows the number of recipe per cuisine type.
+    </p>
+  </div>
+</div>
+
+
+
+
+<div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;margin-top: 3%;">
+  &nbsp;</div>
 
 
 {{ block.super }}

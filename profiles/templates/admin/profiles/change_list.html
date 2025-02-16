@@ -14,6 +14,9 @@
   integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datamaps/0.5.9/datamaps.all.min.js"></script>
 
 <!-- scripts for charts START -->
 <script>
@@ -111,7 +114,7 @@
     const genderChart = new Chart(genderChartCanvas, {
       type: 'bar',
       data: {
-        labels: ['Male', 'Female', 'Other'],
+        labels: ['Male', 'Female', 'Others'],
         datasets: [{
           label: 'User Count',
           data: genderData,
@@ -185,6 +188,42 @@
         }
       }
     });
+
+
+
+    // CIVIL STATUS CHART
+    // Generate the civil status chart
+    const civilStatusData = JSON.parse('{{ civil_status_data_json|escapejs }}');
+    const civilStatusLabels = Object.keys(civilStatusData);
+    const civilStatusValues = Object.values(civilStatusData);
+
+    const civilStatusChartCanvas = document.getElementById('civil-status-chart');
+    const civilStatusChart = new Chart(civilStatusChartCanvas, {
+      type: 'bar',
+      data: {
+        labels: civilStatusLabels,
+        datasets: [{
+          label: 'User Count',
+          data: civilStatusValues,
+          backgroundColor: complementaryColors,
+          borderColor: complementaryColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            beginAtZero: true,
+            stepSize: 1
+          }
+        }
+      }
+    });
+
+
+
+    // COUNTRY MAP
 
   });
 
@@ -284,7 +323,8 @@
 
 
     <!-- most preferred cuisine -->
-    <div class="col-md-3" style="border-radius: 40px; background: #b4f16b; margin-right: 2%;box-shadow: 26px 26px 52px #739e41, inset -26px -26px 52px #97d152;">
+    <div class="col-md-3"
+      style="border-radius: 40px; background: #b4f16b; margin-right: 2%;box-shadow: 26px 26px 52px #739e41, inset -26px -26px 52px #97d152;">
       <h3>Most Preferred Cuisine</h3>
       {% if cuisine_with_most_users %}
       <div>
@@ -317,82 +357,66 @@
     </div>
   </div>
 
-  <!-- another CHART -->
+  <!-- another CIVIL STATUS CHART -->
   <div class="col">
     <div class="card shadow" style="border: none; background-color: white;">
-      <canvas id="cooktime-chart"></canvas>
+      <canvas id="civil-status-chart"></canvas>
       <div class="card-body">
-        <h5 class="card-title">Cook Time Chart</h5>
+        <h5 class="card-title">Civil Status Chart</h5>
         <p class="card-text">
-          The cook time chart shows the amount of time each food will take
-          to be cooked. The data is the calculation of hours converted to minutes
-          plus the minutes indicated by the user.
+          This graph demonstrates the number of users based on their civil status.
         </p>
       </div>
     </div>
   </div>
-  <div class="col">
-    <div class="card shadow" style="border: none; background-color: white;">
-      <canvas id="difficulty-chart"></canvas>
-      <div class="card-body">
-        <h5 class="card-title">Recipe Difficulty Chart</h5>
-        <p class="card-text">
-          The recipe difficulty chart shows the three categories of recipe
-          dificulty: Beginner, Intermediate, and Advanced.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card shadow" style="border: none; background-color: white;">
-      <canvas id="radar-chart"></canvas>
-      <div class="card-body">
-        <h5 class="card-title">Recipe Cost Chart</h5>
-        <p class="card-text">
-          The recipe price chart indicates the price or cost a recipe will
-          amount to. This includes the amount of ingredients, which was indicated by the user
-          who made the recipe.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div style="display: flex;margin-bottom: 50px;padding: 4%;">
 
-  <div class="container" style="border-radius: 20px;
-  background: #b4f16b;
-  box-shadow:  20px 20px 41px #87b550,
-               -20px -20px 41px #e1ff86; padding: 20px;">
-    <div class="row">
-      <div class="col-lg-3">
+  <!-- COUNTRY MAP -->
+
+  <div style="display: flex;margin-bottom: 50px;padding: 4%;width: 100%;">
+
+
+    <div class="container" style="border-radius: 20px;
+                background: #b4f16b;
+                box-shadow:  20px 20px 41px #87b550,
+               -20px -20px 41px #e1ff86; padding: 20px;width: 1100px;">
+      <div class="container d-flex justify-content-start align-items-start" style="width: 100%;">
         <div>
-          <img src="{% static '/icons/batter.png' %}" alt="RecipeBook" style="height: 50px;margin-bottom: 10%;">
-          {% if recipe_with_highest_rating %}
-          <h2>Recipe with Highest Rating</h2>
-          <p>Title: {{ recipe_with_highest_rating.title }}</p>
-          <p>Rating: {{ recipe_with_highest_rating.rating }}</p>
-          <!-- Add other fields as needed -->
-          {% endif %}
+          <h1 class="header">Countries Map per User</h1>
+          <p class="card-text">
+            This graph represents the distribution of users based on their country.
+          </p>
         </div>
       </div>
-      <div class="col-lg-9">
-        <div class="col-md-12">
-          <canvas id="ratings-chart" style="width: 100%; height: 400px;"></canvas>
+      <div class="row">
+        <div class="col-lg-9">
+          <div class="col-md-12">
+            <div id="country-map" style="width: 1000px; height: 700px;"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="container d-flex justify-content-start align-items-start" style="width: 35%;">
-    <div>
-      <img src="{% static '/icons/chef3.png' %}" style="height: 400px;margin-top: -30px;">
-      <h1 class="header">Find Which Recipe has the Highest Rating<img src="{% static '/icons/rate.png' %}"
-          style="height: 50px;"></h1>
-    </div>
-  </div>
-</div>
-<div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;"> &nbsp;</div>
 
+  </div>
+  <div style="border-radius: 20px; background: #dbbfdf;width: 100%;height: 10px; margin-bottom: 2%;"> &nbsp;</div>
 
-{{ block.super }}
-{% endblock %}
+  <!-- Add the following script to the bottom of the template -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const mapData = JSON.parse('{{ map_data_json|escapejs }}');
+
+      // Create the choropleth map chart
+      const countryMap = new Datamap({
+        element: document.getElementById('country-map'),
+        projection: 'mercator',
+        fills: {
+          defaultFill: '#ABDDA4', // Default color for countries without data
+          // Customize colors for countries with data as needed
+        },
+        data: mapData
+      });
+    });
+  </script>
+
+  {{ block.super }}
+  {% endblock %}

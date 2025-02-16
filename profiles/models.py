@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django_resized import ResizedImageField
 from django_countries.fields import CountryField
 
+
 class Profile(models.Model):
     """Profile model"""
     GENDER_CHOICES = (

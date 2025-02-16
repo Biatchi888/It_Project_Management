@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .chatbox {
+            position: relative;
+            height: 71vh;
+            padding: 10px;
+            border: 2px solid #e9823b;
+
+        }
+
+        .chatbot-result {
+            position: relative;
+            flex: 1;
+            height: 60vh;
+            overflow-y: auto;
+        }
+
+        .user-input-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 0 10px 10px;
+            background-color: #fff;
+        }
+
+        .user-input-container input[type="text"] {
+            width: 75%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+
+        }
+
+        .user-input-container button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+
+        }
+
+        #send-button {
+            background-color: #e9823b;
+        }
+
+        .user-message {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .chatbot-message {
+            color: green;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <div class="chatbox">
+
+        <div class="chatbot-result" id="chatbot-result">
+
+            {% for message in conversation_history %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+
+
+
+        <form id="chatform" method="POST" action="{% url 'mychatbot' %}">
+            {% csrf_token %}
+            <div class="user-input-container">
+                <input type="text" name="query" id="query" placeholder="[value] [from_unit] to [to_unit]" required>
+                <button type="submit" id="send-button">Send</button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- <form method="POST" action="{% url 'mychatbot' %}">
+    {% csrf_token %}
+    <label for="query">Enter your conversion query:</label>
+    <input type="text" name="query" id="query" required>
+    <button type="submit">Submit</button>
+  </form> -->
+
+
+
+
+
+
+</body>
+
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+  <h1>Measurement Conversion Chatbot</h1>
+
+  <form method="POST" action="{% url 'mychatbot' %}">
+    {% csrf_token %}
+    <label for="query">Enter your conversion query:</label>
+    <input type="text" name="query" id="query" required>
+    <button type="submit">Submit</button>
+    
+  </form>
+  
+  <div id="chatbot-result">
+    {% for message in conversation_history %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  </div>
+  
+</body>
+</html>
+ -->
