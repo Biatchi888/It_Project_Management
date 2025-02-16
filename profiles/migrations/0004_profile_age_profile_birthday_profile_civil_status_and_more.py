@@ -31,14 +31,16 @@ class Migration(migrations.Migration):
                     ("D", "Divorced"),
                 ],
                 default="Single",
-                max_length=1,
+                max_length=10,
             ),
         ),
         migrations.AddField(
             model_name="profile",
             name="country",
             field=django_countries.fields.CountryField(
-                default="Philippines", max_length=2
+                default="Philippines",
+                max_length=50
+
             ),
         ),
         migrations.AddField(
@@ -52,7 +54,7 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 choices=[("M", "Male"), ("F", "Female"), ("O", "Other")],
                 default="Others",
-                max_length=1,
+                max_length=50,
             ),
         ),
         migrations.AddField(
@@ -66,7 +68,7 @@ class Migration(migrations.Migration):
             field=models.CharField(
                 choices=[("1", "Italian"), ("2", "Mexican"), ("3", "Indian")],
                 default="None",
-                max_length=1,
+                max_length=50,
             ),
         ),
     ]

@@ -16,7 +16,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 load_dotenv()  # Load environment variables
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -136,15 +136,13 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 # Database
 
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default="postgresql://jennefer:rvCiwVoPA62IMLlZP7vJmBxyfOMyjZ94@dpg-cuoqmrhu0jms73bhdhp0-a.oregon-postgres.render.com/rms_db_2ky1",
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
-
-
 # Password validation
 
 
