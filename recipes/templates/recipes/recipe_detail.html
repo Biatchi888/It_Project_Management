@@ -106,8 +106,8 @@
     <div class="recipe-container row mt-4 ">
       <div class="col ingredients card border-dark mb-3">
         <div class="card-header">Ingredients</div>
-        <div class="card-body text-dark">
-          <p class="card-text">{{ recipe.ingredients|safe }}</p>
+        <div>
+          <p>{{ recipe.ingredients|safe }}</p>
 
           <!-- Chatbot Section Below Recipe Ingredients -->
           <div class="chatbot-section mb-5" id="chatbot-section">
@@ -117,7 +117,7 @@
             </button>
             <img src="{% static 'images/goodfood.png' %}" alt="Good Food Logo" class="chatbot-logo">
           </div>
-          <div class="chatbox-container mt-5" id="chatbox-container">
+          <div class="mt-5" style="text-align: center;">
             {% include 'mychatbot/mychatbot.html' %}
           </div>
         </div>
@@ -125,8 +125,8 @@
 
       <div class="col instructions card border-dark mb-3">
         <div class="card-header">Instructions</div>
-        <div class="card-body text-dark">
-          <p class="card-text">{{ recipe.instructions|safe }}</p>
+        <div>
+          <p>{{ recipe.instructions|safe }}</p>
         </div>
       </div>
 

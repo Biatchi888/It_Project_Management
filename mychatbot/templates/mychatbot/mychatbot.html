@@ -5,9 +5,6 @@
     <style>
         /* Chatbot Section */
         .chatbot-section {
-            text-align: center;
-            margin-top: 60px;
-            padding: 10px;
             position: relative;
         }
 
@@ -18,18 +15,9 @@
             margin-bottom: 10px;
         }
 
-        .chatbox-container {
-            width: 100%;
-            max-width: 400px;
-            margin: 0;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            z-index: 1000;
-            display: block;
-            /* Ensure chatbox is visible */
-        }
+
+        /* Ensure chatbox is visible */
+
 
         .chatbox-header {
             background: #007bff;
@@ -110,7 +98,7 @@
 </head>
 
 <body>
-    <div class="chatbox-container mt-5" id="chatbox-container">
+    <div class=" mt-5" id="chatbox-container">
         <div class="chatbox-header">
             <span>Chatbot</span>
             <button onclick="toggleChatbox()" class="close-chat">✖</button>
