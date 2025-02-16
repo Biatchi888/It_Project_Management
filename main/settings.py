@@ -185,6 +185,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USER_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Static files (CSS, JavaScript, Images)
 
