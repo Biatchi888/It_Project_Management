@@ -3,133 +3,175 @@
 
 <head>
     <style>
-        .chatbox {
-            position: relative;
-            height: 71vh;
+        /* Chatbot Section */
+        .chatbot-section {
+            text-align: center;
+            margin-top: 60px;
             padding: 10px;
-            border: 2px solid #e9823b;
-
-        }
-
-        .chatbot-result {
             position: relative;
-            flex: 1;
-            height: 60vh;
-            overflow-y: auto;
         }
 
-        .user-input-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        .chatbot-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chatbox-container {
             width: 100%;
-            padding: 0 10px 10px;
-            background-color: #fff;
+            max-width: 400px;
+            margin: 0;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            z-index: 1000;
+            display: block;
+            /* Ensure chatbox is visible */
         }
 
-        .user-input-container input[type="text"] {
-            width: 75%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 13px;
-
+        .chatbox-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .user-input-container button {
-            background-color: #4CAF50;
+        .close-chat {
+            background: none;
             border: none;
             color: white;
-            padding: 8px 15px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
-            border-radius: 4px;
-
         }
 
-        #send-button {
-            background-color: #e9823b;
+        .chatbox-body {
+            height: 250px;
+            overflow-y: auto;
+            padding: 10px;
         }
+
+        .chatbox-footer {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            display: flex;
+        }
+
+        .chatbox-footer input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chatbox-footer button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chatbot-result p {
+            margin: 5px 0;
+        }
+
 
         .user-message {
-            color: blue;
-            font-weight: bold;
+            align-self: flex-end;
+            background: #007bff;
+            color: white;
+            text-align: left;
+            padding: 10px;
+            border-radius: 12px;
+            max-width: 60%;
+            /* Ensures messages don't stretch too wide */
+            word-wrap: break-word;
+            display: inline-block;
+            /* Ensures the message box only wraps the content */
         }
 
         .chatbot-message {
-            color: green;
-            font-style: italic;
+            align-self: flex-start;
+            background: #e9ecef;
+            color: #333;
+            padding: 10px;
+            border-radius: 12px;
+            max-width: 60%;
+            word-wrap: break-word;
+            display: inline-block;
         }
     </style>
 </head>
 
-
 <body>
-
-
-    <div class="chatbox">
-
-        <div class="chatbot-result" id="chatbot-result">
-
-            {% for message in conversation_history %}
-            <p>{{ message }}</p>
-            {% endfor %}
+    <div class="chatbox-container mt-5" id="chatbox-container">
+        <div class="chatbox-header">
+            <span>Chatbot</span>
+            <button onclick="toggleChatbox()" class="close-chat">✖</button>
         </div>
-
-
-
-        <form id="chatform" method="POST" action="{% url 'mychatbot' %}">
-            {% csrf_token %}
-            <div class="user-input-container">
-                <input type="text" name="query" id="query" placeholder="[value] [from_unit] to [to_unit]" required>
-                <button type="submit" id="send-button">Send</button>
+        <div class="chatbox-body">
+            <p style="font-style: italic; font-size: 0.875em;">
+                To convert measurements, please specify the amount and units, followed by the target unit.
+                <br>Example: "1 cup to tablespoon".
+            </p>
+            <div class="chatbot-result" id="chatbot-result">
+                {% for message in conversation_history %}
+                <p class="{% if 'User:' in message %}user-message{% else %}chatbot-message{% endif %}">{{ message }}</p>
+                {% endfor %}
             </div>
-        </form>
+        </div>
+        <div class="chatbox-footer">
+            <form id="chatform" method="POST" action="{% url 'mychatbot' %}">
+                {% csrf_token %}
+                <input type="text" name="query" id="query" placeholder="Type a message..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let chatboxContainer = document.getElementById('chatbox-container');
+            let chatboxBody = document.getElementById('chatbot-result');
+            chatboxContainer.style.display = 'none'; // Ensure it starts hidden
+
+            const form = document.getElementById("chatform");
+            if (form) {
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault(); // Prevent page reload
+                    let formData = new FormData(this);
+
+                    fetch(this.action, {
+                        method: this.method,
+                        body: formData,
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            chatboxBody.innerHTML = ""; // Clear previous messages
+                            data.conversation_history.forEach(message => {
+                                let p = document.createElement("p");
+                                p.className = message.includes('User:') ? 'user-message' : 'chatbot-message';
+                                p.textContent = message;
+                                chatboxBody.appendChild(p);
+                            });
+                            chatboxBody.scrollTop = chatboxBody.scrollHeight; // Auto-scroll
+                            document.getElementById("query").value = ""; // Clear input field
+                        })
+                        .catch(error => console.error("Error:", error));
+                });
+            }
+        });
 
 
-
-    <!-- <form method="POST" action="{% url 'mychatbot' %}">
-    {% csrf_token %}
-    <label for="query">Enter your conversion query:</label>
-    <input type="text" name="query" id="query" required>
-    <button type="submit">Submit</button>
-  </form> -->
-
-
-
-
-
-
+    </script>
 </body>
 
 </html>
-
-<!-- 
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-
-<body>
-  <h1>Measurement Conversion Chatbot</h1>
-
-  <form method="POST" action="{% url 'mychatbot' %}">
-    {% csrf_token %}
-    <label for="query">Enter your conversion query:</label>
-    <input type="text" name="query" id="query" required>
-    <button type="submit">Submit</button>
-    
-  </form>
-  
-  <div id="chatbot-result">
-    {% for message in conversation_history %}
-      <p>{{ message }}</p>
-    {% endfor %}
-  </div>
-  
-</body>
-</html>
- -->

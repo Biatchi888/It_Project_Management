@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 from django_resized import ResizedImageField
 from django_countries.fields import CountryField
-
+from cloudinary.models import CloudinaryField
 
 class Profile(models.Model):
     """Profile model"""
@@ -45,14 +45,14 @@ class Profile(models.Model):
     )   
 
     user = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE)
-    image = ResizedImageField(
-        size=[300, 300],
-        quality=75,
-        upload_to="profiles/",
-        force_format="WEBP",
-        blank=False,
-    )
-
+    image = CloudinaryField('image', 
+            transformation=[
+                {'width': 400, 'crop': 'limit', 'quality': 'auto'}
+            ],
+            null=False, 
+            blank=False
+        )
+    image_url = models.URLField(max_length=500, blank=True, null=True)
     bio = RichTextField(max_length=2500, null=True, blank=True)
 
     first_name = models.CharField(max_length=100, null=True, blank=True)

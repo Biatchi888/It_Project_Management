@@ -58,8 +58,13 @@ class Recipe(models.Model):
     total_cooktime = models.IntegerField(null=False, blank=False, default=0,editable=False)  # Make the field non-editable
 
     price = models.IntegerField(null=False, blank=False)
-    image = CloudinaryField('image', null=False, blank=False)
-
+    image = CloudinaryField('image', 
+            transformation=[
+                {'width': 400, 'crop': 'limit', 'quality': 'auto'}
+            ],
+            null=False, 
+            blank=False
+        )
     image_url = models.URLField(max_length=500, blank=True, null=True)
 
     image_alt = models.CharField(max_length=100, null=False, blank=False)

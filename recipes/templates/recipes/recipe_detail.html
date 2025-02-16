@@ -8,94 +8,40 @@
 <style>
   /* Chatbot Section */
   .chatbot-section {
-      text-align: center;
-      margin-top: 20px;
-      padding: 10px;
-      position: relative;
+    text-align: center;
+    margin-top: 60px;
+    padding: 10px;
+    position: relative;
   }
 
   .chatbot-text {
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
   }
 
   .chat-icon {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-bottom: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .chatbox-container {
+    display: none;
   }
 
   .chatbot-logo {
-      display: block;
-      margin: 0 auto;
-      width: 120px; /* Adjust as needed */
-      height: auto;
-  }
-
-  /* Chatbox Styling */
-  .chatbox-container {
-      display: none; /* Initially hidden */
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-      z-index: 1000;
-  }
-
-  .chatbox-header {
-      background: #007bff;
-      color: white;
-      padding: 10px;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-  }
-
-  .close-chat {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-  }
-
-  .chatbox-body {
-      height: 250px;
-      overflow-y: auto;
-  }
-
-  .chatbox-footer {
-      padding: 10px;
-      border-top: 1px solid #ddd;
-      display: flex;
-  }
-
-  .chatbox-footer input {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-  }
-
-  .chatbox-footer button {
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      margin-left: 5px;
-      border-radius: 5px;
-      cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    width: 120px;
+    /* Adjust as needed */
+    height: auto;
   }
 </style>
 
@@ -113,22 +59,27 @@
 
       <h1 class="text-center">{{ recipe.title }}</h1>
       <p class="text-center">Posted by {{recipe.user}} on {{recipe.posted_date}} </p>
-      <div class="card  " style="background-color:#ffedbd;">
+      <div class="card" style="background-color:#ffedbd;">
         <div class="card-body">
-          <p class="card-text ">
-
-          <p class="p-3 text-center"><i class="bi bi-stopwatch-fill"></i><strong>Preparation Time: </strong> Hours:{{
-            recipe.preptime_hours }} Minutes: {{ recipe.preptime_minutes }}</p>
-          <p class="p-3 text-center"><i class="bi bi-egg-fried"></i><strong>Servings: </strong> {{ recipe.servings }}
+          <p class="p-3 text-center">
+            <i class="bi bi-stopwatch-fill"></i>
+            <strong>Preparation Time:</strong> Hours: {{ recipe.preptime_hours }} Minutes: {{ recipe.preptime_minutes }}
           </p>
-          <p class="p-3 text-center"><i class="bi bi-hourglass-split"></i><strong>Cook Time: </strong> Hours: {{
-            recipe.cooktime_hours }} Minutes: {{ recipe.cooktime_minutes }} </p>
-          <p class="p-3 text-center"><i class="bi bi-piggy-bank-fill"></i><strong>Estimated Cost: </strong> {{
-            recipe.price }}</p>
-
+          <p class="p-3 text-center">
+            <i class="bi bi-egg-fried"></i>
+            <strong>Servings:</strong> {{ recipe.servings }}
+          </p>
+          <p class="p-3 text-center">
+            <i class="bi bi-hourglass-split"></i>
+            <strong>Cook Time:</strong> Hours: {{ recipe.cooktime_hours }} Minutes: {{ recipe.cooktime_minutes }}
+          </p>
+          <p class="p-3 text-center">
+            <i class="bi bi-piggy-bank-fill"></i>
+            <strong>Estimated Cost:</strong> {{ recipe.price }}
           </p>
         </div>
       </div>
+
 
       <hr>
       <p>{{recipe.description}}</p>
@@ -158,34 +109,17 @@
         <div class="card-body text-dark">
           <p class="card-text">{{ recipe.ingredients|safe }}</p>
 
-  <!-- Chatbot Section Below Recipe Ingredients -->
-<div class="chatbot-section mb-5" id="chatbot-section">
-  <p class="chatbot-text">Need help in conversion?</p>
-  <button class="chat-icon" onclick="toggleChatbox()">
-      <i class="fas fa-comments"></i>
-  </button>
-  <img src="{% static 'images/goodfood.png' %}" alt="Good Food Logo" class="chatbot-logo">
-</div>
-
-<!-- Chatbox Container (Hidden by Default) -->
-<div class="chatbox-container mt-5" id="chatbox-container">
-  <div class="chatbox-header">
-      <span>Chatbot</span>
-      <button onclick="toggleChatbox()" class="close-chat">✖</button>
-  </div>
-  <div class="chatbox-body">
-      <div class="chatbot-result"></div>
-  </div>
-  <div class="chatbox-footer">
-      <form onsubmit="handleChatbotFormSubmit(event)">
-          <input type="text" name="query" placeholder="Type a message..." required>
-          <button type="submit">Send</button>
-      </form>
-  </div>
-</div>
-
-
-
+          <!-- Chatbot Section Below Recipe Ingredients -->
+          <div class="chatbot-section mb-5" id="chatbot-section">
+            <p class="chatbot-text">Need help in conversion?</p>
+            <button class="chat-icon" onclick="toggleChatbox()">
+              <i class="fas fa-comments"></i>
+            </button>
+            <img src="{% static 'images/goodfood.png' %}" alt="Good Food Logo" class="chatbot-logo">
+          </div>
+          <div class="chatbox-container mt-5" id="chatbox-container">
+            {% include 'mychatbot/mychatbot.html' %}
+          </div>
         </div>
       </div>
 
@@ -199,12 +133,15 @@
     </div>
 
     <h2 class="text-center">Rate this recipe<br><span id="boot-icon" class="bi bi-star-fill"
-        style="font-size: 18px; color: rgb(255, 210, 48);">&nbsp&nbsp&nbsp<span id="boot-icon" class="bi bi-star-fill"
-          style="font-size: 18px; color: rgb(255, 210, 48);">&nbsp&nbsp&nbsp<span id="boot-icon" class="bi bi-star-fill"
-            style="font-size: 18px; color: rgb(255, 210, 48);"></span>&nbsp&nbsp&nbsp<span id="boot-icon"
-            class="bi bi-star-fill" style="font-size: 18px; color: rgb(255, 210, 48);"></span>&nbsp&nbsp&nbsp<span
-            id="boot-icon" class="bi bi-star-fill"
-            style="font-size: 18px; color: rgb(255, 210, 48);">&nbsp&nbsp&nbsp</span></span>
+            style="font-size: 18px; color: rgb(255, 210, 48);">&nbsp&nbsp&nbsp<span id="boot-icon"
+              class="bi bi-star-fill"
+              style="font-size: 18px; color: rgb(255, 210, 48);">&nbsp&nbsp&nbsp<span id="boot-icon"
+                class="bi bi-star-fill"
+                style="font-size: 18px; color: rgb(255, 210, 48);"></span>&nbsp&nbsp&nbsp<span id="boot-icon"
+                class="bi bi-star-fill"
+                style="font-size: 18px; color: rgb(255, 210, 48);"></span>&nbsp&nbsp&nbsp<span
+                id="boot-icon" class="bi bi-star-fill"
+                style="font-size: 18px; color: rgb(255, 210, 48);">&nbsp&nbsp&nbsp</span></span>
       </span></h2>
 
     <div class="text-center">
@@ -229,57 +166,62 @@
 
 
 <script>
-  function toggleChatbox() {
-    var chatboxContainer = document.getElementById('chatbox-container');
-    chatboxContainer.style.display = chatboxContainer.style.display === 'none' || chatboxContainer.style.display === '' ? 'block' : 'none';
-}
 
 
 
-  // Handle chatbot form submission
-  function handleChatbotFormSubmit(event) {
-    event.preventDefault();
-
-    var form = event.target;
-    var formData = new FormData(form);
-
-    // Send an AJAX request to submit the chatbot form
-    fetch(form.action, {
-      method: form.method,
-      body: formData
-    })
+  function loadChatbot() {
+    fetch("{% url 'mychatbot' %}")  // Fetch chatbot content from Django view
       .then(response => response.text())
       .then(data => {
-        // Extract the recent query and chatbot response from the data using regular expressions
-        var queryMatch = data.match(/User: (.*?)<\/p>/g);
-        var query = queryMatch ? queryMatch[queryMatch.length - 1].replace('User: ', '') : '';
-
-        var responseMatch = data.match(/Chatbot: (.*?)<\/p>/g);
-        var response = responseMatch ? responseMatch[responseMatch.length - 1].replace('Chatbot: ', '') : '';
-
-        // Create the HTML for the recent query and chatbot response
-        var conversationHtml = '<p>User: ' + query + '</p>';
-        conversationHtml += '<p>Chatbot: ' + response + '</p>';
-
-        // Display the recent query and chatbot response in the chatbox interface
-        var chatboxContainer = document.querySelector('.chatbox-container');
-        var chatboxResult = chatboxContainer.querySelector('.chatbot-result');
-        var currentContent = chatboxResult.innerHTML;
-        var newContent = currentContent + conversationHtml;
-        chatboxResult.innerHTML = newContent;
-
-        // Clear the text input field
-        var userInput = chatboxContainer.querySelector('input[name="query"]');
-        userInput.value = '';
-
-        // Scroll to the bottom of the chatbox
-        chatboxResult.scrollTop = chatboxResult.scrollHeight;
-
-
+        document.getElementById("chatbox-container").innerHTML = data; // Inject chatbot HTML
+        document.getElementById("chatbox-container").style.display = "block"; // Show chatbox
       })
-      .catch(error => {
-        console.error('Error submitting chatbot form:', error);
+      .catch(error => console.error("Error loading chatbot:", error));
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    let chatboxContainer = document.getElementById('chatbox-container');
+
+    // Ensure the chatbot is hidden on page load
+    chatboxContainer.style.display = 'none';
+
+    const form = document.getElementById("chatform");
+
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent full page reload
+
+        let formData = new FormData(this);
+
+        fetch(this.action, {
+          method: this.method,
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest" // Identify it as an AJAX request
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            let chatboxResult = document.getElementById("chatbot-result");
+            chatboxResult.innerHTML = ""; // Clear previous messages
+
+            // Append new conversation history
+            data.conversation_history.forEach(message => {
+              let p = document.createElement("p");
+              p.textContent = message;
+              chatboxResult.appendChild(p);
+            });
+
+            // Clear input field after sending
+            document.getElementById("query").value = "";
+          })
+          .catch(error => console.error("Error:", error));
       });
+    }
+  });
+
+  function toggleChatbox() {
+    let chatboxContainer = document.getElementById('chatbox-container');
+    chatboxContainer.style.display = chatboxContainer.style.display === 'none' ? 'block' : 'none';
   }
 
 
